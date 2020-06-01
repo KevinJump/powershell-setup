@@ -5,8 +5,10 @@
 $log = "$PSScriptRoot\setup.log";
 $error.Clear();
 
+Write-Host "- looking for prerequisits"
+
 # get nuget.exe (cache for four days)
-Write-Host "# Checking for nuget.exe"
+Write-Host " > Checking for nuget.exe"
 
 $cache = 4
 $nuget = "$PSScriptRoot\nuget.exe"
@@ -18,7 +20,7 @@ if ((test-path $nuget) -and ((Get-ChildItem $nuget).CreationTime -lt [DateTime]:
 }
 if (-not (test-path $nuget))
 {
-    Write-Host "Download Nuget..."
+    Write-Host "   Download Nuget..."
     Invoke-WebRequest $source -OutFile $nuget
     if (-not $?) { throw "Failed to download nuget" }
 }
@@ -27,12 +29,18 @@ if (-not (test-path $nuget))
 npm -v >> $log 2>&1
 if (-not $?) { throw "failed to report npm version" }
 
+# get umb-pack
+Write-Host " > Installing UmbPack"
+dotnet tool install Umbraco.Tools.Packages --global >> $log 2>&1
+
 # clean npm cache
 npm cache clean --force >> $log 2>&1
 $error.Clear()
 
-Write-Host "# Installing node packages"
+Write-Host " > Installing node packages"
 npm install ".." >> $log 2>&1
-Write-Output ">> $? $($error.Count)" >> $log 2>&1
+Write-Output " > $? $($error.Count)" >> $log 2>&1
 # Don't really care about the messages from npm install making us think there are errors
 $error.Clear()
+
+Write-Host "- Boot Complete "
