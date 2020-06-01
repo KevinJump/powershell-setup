@@ -1,5 +1,5 @@
-# sample powershell build things
+# Sample Powershell build things
 
 **[Experimental]**
 
-Some powershell scripts that might help setting up a project template.
+Some Powershell scripts that might help setting up a project template.

@@ -30,8 +30,7 @@ function Setup
     }
 
     rename-project $library
-
-    # update-gulpscript $sandbox
+    update-gulpscript $sandbox
 
     Write-Host "--- Done ---"
 }
