@@ -48,5 +48,5 @@ jobs:
       - name: upload-artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: BuildResults
+          name: Build-Results-${{ steps.get_version.outputs.VERSION }}
           path: ${{ env.OUTPUT }}/**/*
