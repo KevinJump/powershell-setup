@@ -4,7 +4,7 @@ name: Build and Package
 
 env:
   OUTPUT: ./Output
-  LIBRARY_FOLDER: ./src/packagetemplate
+  LIBRARY_FOLDER: ./src/PackageTemplate
 
 on:
   push:
@@ -50,3 +50,8 @@ jobs:
         with:
           name: Build-Results-${{ steps.get_version.outputs.VERSION }}
           path: ${{ env.OUTPUT }}/**/*
+
+
+
+
+

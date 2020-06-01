@@ -56,11 +56,13 @@ function  rename-project ($libraryName) {
     }
 
     if (Test-Path $project) {
+        Write-Host " > Updating .csproj file"
         # replace all instances of the project name in the config
         ((Get-Content $project -Raw) -replace $currentName, $libraryName) | Set-Content -Path $project
     }
 
     if (Test-Path $solution) {
+        Write-Host " > Updating .sln file"
         # replace all instances of the project name in .sln file.
         ((Get-Content $solution -Raw) -replace $currentName, $libraryName) | Set-Content -Path $solution
     }
@@ -68,16 +70,30 @@ function  rename-project ($libraryName) {
     # update the properties/AssemblyInfo.cs file
     $assemblyFile = "$folder/Properties/AssemblyInfo.cs"
     if (Test-Path $assemblyFile) {
+        Write-Host " > Updating assemblyInfo.cs"
         ((Get-Content $assemblyFile -Raw) -replace $currentName, $libraryName) | Set-Content -Path $assemblyFile
     }
 
+    $buildYml = "$PSScriptRoot/../.github/workflows/build.yml";
+    if (Test-Path $buildYml)
+    {
+        Write-Host " > Updating build.yml"
+        ((Get-Content $buildYml -Raw) -replace $currentName, $libraryName) | Set-Content -Path $buildYml
 
+    }
+
+    Write-Host " > Renaming files/folders..."
+    
     # rename the *.csproj file
     Rename-Item -Path $project -NewName "$folder\$libraryName.csproj"
 
     # rename the soluion file ?
     Rename-Item -Path $solution -NewName "$solutionFolder\$libraryName.sln"
 
+    # rename the nuspec file
+    if (Test-Path "$folder/$currentName.nuspec") {
+        Rename-Item -Path "$folder/$currentName.nuspec" -NewName "$folder/$libraryName.nuspec"
+    }
 
     # rename the app_plugins folder
     $appPlugins = "$folder/App_Plugins/$currentName";
