@@ -40,7 +40,7 @@ jobs:
         run: msbuild ./src -p:Configuration=Release
       
       - name: nuget Pack 
-        run: nuget pack -Build ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -Prop Configuration=Release -OutputDirectory ${{ env.OUTPUT }}
+        run: nuget pack -Build ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -Prop Configuration=Release -OutputDirectory ${{ env.OUTPUT }} -Symbols
         
       - name: create umbraco package
         run: UmbPack pack ./src/package.xml -o ${{ env.OUTPUT }} -v ${{ steps.get_version.outputs.VERSION }}
