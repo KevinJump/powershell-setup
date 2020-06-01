@@ -39,7 +39,7 @@ jobs:
         run: msbuild ./src -p:Configuration=Release
       
       - name: nuget 
-        run: nuget pack ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -OutputDirectiory .\out
+        run: nuget pack ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -OutputDirectory .\out
         
       - name: upload-artifact
         uses: actions/upload-artifact@v2
