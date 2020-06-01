@@ -3,7 +3,7 @@
 name: Build and Package
 
 env:
-  LIBRARY_FOLDER: ./src/packagetemplate/
+  LIBRARY_FOLDER: ./src/packagetemplate
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
     runs-on: windows-latest
 
     steps:      
-      - name: Get Version #get the version number from the tag (we expect release/version.num)
+      - name: Get Version 
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/release\//}
         shell: bash
@@ -39,7 +39,7 @@ jobs:
         run: msbuild ./src -p:Configuration=Release
       
       - name: nuget 
-        run: nuget pack ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_tag.outputs.VERSION }} -OutputDirectiory .\out
+        run: nuget pack ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -OutputDirectiory .\out
         
       - name: upload-artifact
         uses: actions/upload-artifact@v2
