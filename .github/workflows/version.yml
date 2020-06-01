@@ -1,8 +1,9 @@
-# This is a basic workflow to help you get started with Actions
+# Builds a library, and packages it up.
 
 name: Build and Package
 
 env:
+  OUTPUT: ./Output
   LIBRARY_FOLDER: ./src/packagetemplate
 
 on:
@@ -26,23 +27,26 @@ jobs:
       - name: Setup NuGet.exe for use with actions
         uses: NuGet/setup-nuget@v1.0.2        
         
-      - name: setup .net core
+      - name: Setup .net core
         uses: actions/setup-dotnet@v1.4.0
       
-      - name: install umbpack
+      - name: Setup UmbPack
         run: dotnet tool install Umbraco.Tools.Packages --global
         
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       
-      - name: build
+      - name: Build Project
         run: msbuild ./src -p:Configuration=Release
       
-      - name: nuget 
-        run: nuget pack -Build ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -Prop Configuration=Release -OutputDirectory .\out
+      - name: nuget Pack 
+        run: nuget pack -Build ${{ env.LIBRARY_FOLDER }} -version ${{ steps.get_version.outputs.VERSION }} -Prop Configuration=Release -OutputDirectory ${{ env.OUTPUT }}
         
-      - name: upload-artifact
+      - name: create umbraco package
+        run: UmbPack pack ./src/package.xml -o ${{ env.OUTPUT }} -v ${{ steps.get_version.outputs.VERSION }}
+        
+      - name: upload-artifacts
         uses: actions/upload-artifact@v2
         with:
           name: BuildResults
-          path: ./out/**/*
+          path: ${{ env.OUTPUT }}/**/*
